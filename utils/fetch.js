@@ -4,6 +4,8 @@
 import 'whatwg-fetch'
 import fetchIntercept from 'fetch-intercept';
 
+let env = process.env.NODE_ENV
+
 export function fetchData(url,data = {},fn){
 
     let option = {
@@ -18,8 +20,11 @@ export function fetchData(url,data = {},fn){
     const unregister = fetchIntercept.register({
         request: function (url, config) {
             // Modify the url or config here
-            url = `api/${url}`
-            console.log(url, config)
+            console.log(env)
+            if(env == 'development'){
+                url = `api/${url}`
+            }
+            // console.log(url, config)
             return [url, config];
         },
 

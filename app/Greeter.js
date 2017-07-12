@@ -16,7 +16,7 @@ class Greeter extends Component {
     render() {
         return (
             <div className={styles.root}>
-                <span>{config.greetText}666999</span>
+                <span>{config.greetText}123456789123456789123</span>
                 <pre style={{whiteSpace: 'pre-wrap'}}>{this.state.data}</pre>
             </div>
         );

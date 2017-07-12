@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "dev":"webpack-dev-server"
+    "dev": "webpack-dev-server"
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +27,9 @@
     "webpack-dev-server": "^2.5.1"
   },
   "dependencies": {
+    "fetch-intercept": "^2.2.3",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "whatwg-fetch": "^2.0.3"
   }
 }

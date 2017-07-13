@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import config from './config.json';
-import styles from './Greeter.css';//导入
+import config from '../assets/json/config.json';
+import styles from '../assets/css/Greeter.css';//导入
 import {fetchData} from '../utils/fetch'
 
 
@@ -16,8 +16,13 @@ class Greeter extends Component {
     render() {
         return (
             <div className={styles.root}>
-                <span>{config.greetText}123456789123456789123</span>
+                {/*
+                    style={{backgroundImage:`url(${require('../assets/img/bg.jpg')})`}}
+                     行间样式是没问题的，可以加载到
+                */}
+                <span>{config.greetText}888</span>
                 <pre style={{whiteSpace: 'pre-wrap'}}>{this.state.data}</pre>
+                <img src={require('../assets/img/bg.jpg')} className={styles.img} alt=""/>
             </div>
         );
     }

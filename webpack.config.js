@@ -27,7 +27,7 @@ module.exports = {
         filename: "bundle.js"//打包后输出文件的文件名
     },
     module: {//在配置文件里添加JSON loader
-        loaders: [
+        rules: [
             {
                 test: /\.json$/,
                 loader: "json-loader"
@@ -39,28 +39,29 @@ module.exports = {
             },
             // 1.0的
             // loader: 'style-loader!css-loader?modules'//添加对样式表的处理
-            {
-                test: /\.css$/,
-                use:
+            // {
+            //     test: /\.css$/,
+            //     use:
                 // ExtractTextPlugin.extract 在dev模式下不好使
-                extractCSS.extract({
-                    fallback: "style-loader",
-                    use: [
-                        {
-                            loader: "css-loader",
-                            options: {
-                                modules: true
-                            }
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                plugins: function () {
-                                    return [autoprefixer]
-                                }
-                            }
-                    }]
-                }),
+                // extractCSS
+                // ExtractTextPlugin.extract({
+                //     fallback: "style-loader",
+                //     use: [
+                //         {
+                //             loader: "css-loader",
+                //             options: {
+                //                 modules: true
+                //             }
+                //         },
+                //         {
+                //             loader: 'postcss-loader',
+                //             options: {
+                //                 plugins: function () {
+                //                     return [autoprefixer]
+                //                 }
+                //             }
+                //     }]
+                // }),
                 // [
                 //     {
                 //         loader: "style-loader"
@@ -80,49 +81,27 @@ module.exports = {
                 //         }
                 //     }
                 // ]
-            },
-            // {test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192'},
+            // },
             {
-                test: /\.(png|jpg|gif)$/,
+                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
                     limit: 8192,
-                    // name: '/img/[name].[hash:7].[ext]'
-                    name: path.posix.join(assetsSubDirectory, '/img/[name].[hash:7].[ext]')
+                    name: path.posix.join(assetsSubDirectory, '/img/[name].[ext]')
+                }
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 8192,
+                    name: path.posix.join(assetsSubDirectory, '/font/[name].[hash:7].[ext]')
                 }
             }
         ]
     },
     plugins: [
         new webpack.BannerPlugin("Copyright Flying Unicorns inc."),//在这个数组中new一个就可以了
-
-        //这里开始写
-        /*
-         {
-         filename: './dist',
-         template: '', // html模板路径,模板路径是支持传参调用loader的,
-         inject: 'body', //打包之后的js插入的位置，true/'head'/'body'/false,
-         chunks: ['./static/js/bundle.js']
-         }
-         */
-        // new HtmlWebpackPlugin({
-        //     filename: '../index.html',
-        //     inject: true,
-        //     template: './public/index.html',
-        //     // 压缩的方式
-        //     // minify: {
-        //     //     removeComments: true,
-        //     //     collapseWhitespace: true,
-        //     //     removeAttributeQuotes: true
-        //     //     // more options:
-        //     //     // https://github.com/kangax/html-minifier#options-quick-reference
-        //     // },
-        // }),
-        // new ExtractTextPlugin({
-        //     filename: 'css/[name].css',
-        //     disable: false,
-        //     allChunks: false
-        // })
     ],
     devServer: {
         contentBase: "./public",//本地服务器所加载的页面所在的目录
@@ -142,8 +121,7 @@ module.exports = {
         }
     }
 }
-// console.log(666)
-// console.log(process.env.NODE_ENV)
+
 if (process.env.NODE_ENV === 'production') {
     // '#source-map'
     module.exports.devtool = false
@@ -152,60 +130,98 @@ if (process.env.NODE_ENV === 'production') {
         publicPath: './',
         // filename: "/js/bundle.js"// 打包后输出文件的文件名
         filename: path.posix.join(assetsSubDirectory, 'js/bundle.js')
-    },
-        // http://vue-loader.vuejs.org/en/workflow/production.html
-        module.exports.plugins = (module.exports.plugins || []).concat([
-            new webpack.DefinePlugin({
-                'process.env': {
-                    NODE_ENV: '"production"'
-                }
+    }
+
+    let css_json = {
+        test: /\.css$/,
+        use:
+        // ExtractTextPlugin.extract 在dev模式下不好使 extractCSS
+            ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: [
+                    {
+                        loader: "css-loader",
+                        options: {
+                            modules: true
+                        }
+                    },
+                    {
+                        loader: "resolve-url-loader",
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: function () {
+                                return [autoprefixer]
+                            }
+                        }
+                    }]
             }),
-            new ExtractTextPlugin(path.posix.join(assetsSubDirectory, '/css/index.css')),//  生成css文件夹
-            new HtmlWebpackPlugin({
-                filename: './index.html',
-                inject: true,
-                template: './template.html',
-                //压缩HTML文件
-                minify: {
-                    removeComments: true, //移除HTML中的注释
-                    collapseWhitespace: true, //删除空白符与换行符
-                    // 为了使GAEA能正确识别script, 保留引号
-                    // removeAttributeQuotes: true,
-                    minifyJS: true,
-                    removeScriptTypeAttributes: true,
-                    removeStyleLinkTypeAttributes: true
-                }
-                // minify: {
-                //     removeComments: true,
-                //     collapseWhitespace: true,
-                //     removeAttributeQuotes: true
-                //     // more options:
-                //     // https://github.com/kangax/html-minifier#options-quick-reference
-                // },
-            }),
-            // new webpack.optimize.UglifyJsPlugin({
-            //     sourceMap: true,
-            //     compress: {
-            //         warnings: false
-            //     }
-            // }),
-            // new webpack.LoaderOptionsPlugin({
-            //     minimize: true
-            // })
-        ])
+    }
+    module.exports.module.rules.push(css_json)
+    module.exports.plugins = (module.exports.plugins || []).concat([
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        }),
+        new ExtractTextPlugin(path.posix.join(assetsSubDirectory, '/css/[name].[contenthash].css')),//  生成css文件夹
+        new HtmlWebpackPlugin({
+            filename: './index.html',
+            inject: true,
+            template: './template.html',
+            //压缩HTML文件
+            minify: {
+                removeComments: true, //移除HTML中的注释
+                collapseWhitespace: true, //删除空白符与换行符
+                // 为了使GAEA能正确识别script, 保留引号
+                // removeAttributeQuotes: true,
+                minifyJS: true,
+                removeScriptTypeAttributes: true,
+                removeStyleLinkTypeAttributes: true
+            }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: false,
+            compress: {
+                warnings: false
+            }
+        }),
+        // new webpack.LoaderOptionsPlugin({
+        //     minimize: true
+        // })
+    ])
 } else if (process.env.NODE_ENV === 'development') {
+    let css_json = {
+        test: /\.css$/,
+        use: [
+                {
+                    loader: "style-loader"
+                },
+                {
+                    loader: "css-loader",
+                    options: {
+                        modules: true
+                    }
+                },
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        plugins: function () {
+                            return [autoprefixer]
+                        }
+                    }
+                }
+            ]
+    }
+    module.exports.module.rules.push(css_json)
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"development"'
             }
         }),
-        new ExtractTextPlugin("styles.css"),//  生成css文件夹
-        // new HtmlWebpackPlugin({
-        //     filename: 'index.html',
-        //     template: 'index.html',
-        //     inject: true
-        // }),
+        // new ExtractTextPlugin(path.posix.join(assetsSubDirectory, '/css/[name].[contenthash].css')),//  生成css文件夹
         new webpack.HotModuleReplacementPlugin()
 
     ])

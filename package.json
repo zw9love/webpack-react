@@ -1,7 +1,7 @@
 {
   "name": "webpack-react",
   "version": "1.0.0",
-  "description": "",
+  "description": "webpack for react",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -27,13 +27,13 @@
     "react-transform-hmr": "^1.0.4",
     "style-loader": "^0.18.2",
     "webpack": "^3.1.0",
-    "webpack-dev-server": "^2.5.1"
+    "webpack-dev-server": "^2.5.1",
+    "url-loader": "^0.5.9"
   },
   "dependencies": {
     "fetch-intercept": "^2.2.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "url-loader": "^0.5.9",
     "whatwg-fetch": "^2.0.3"
   }
 }

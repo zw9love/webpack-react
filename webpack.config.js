@@ -1,5 +1,5 @@
 /**
- * Created by admin on 2017/7/10.
+ * Created by zw9love on 2017/7/10.
  */
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer')

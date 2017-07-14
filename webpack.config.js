@@ -37,51 +37,6 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel-loader',//在webpack的module部分的loaders里进行配置即可
             },
-            // 1.0的
-            // loader: 'style-loader!css-loader?modules'//添加对样式表的处理
-            // {
-            //     test: /\.css$/,
-            //     use:
-                // ExtractTextPlugin.extract 在dev模式下不好使
-                // extractCSS
-                // ExtractTextPlugin.extract({
-                //     fallback: "style-loader",
-                //     use: [
-                //         {
-                //             loader: "css-loader",
-                //             options: {
-                //                 modules: true
-                //             }
-                //         },
-                //         {
-                //             loader: 'postcss-loader',
-                //             options: {
-                //                 plugins: function () {
-                //                     return [autoprefixer]
-                //                 }
-                //             }
-                //     }]
-                // }),
-                // [
-                //     {
-                //         loader: "style-loader"
-                //     },
-                //     {
-                //         loader: "css-loader",
-                //         options: {
-                //             modules: true
-                //         }
-                //     },
-                //     {
-                //         loader: 'postcss-loader',
-                //         options: {
-                //             plugins: function () {
-                //                 return [autoprefixer]
-                //             }
-                //         }
-                //     }
-                // ]
-            // },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
@@ -192,6 +147,7 @@ if (process.env.NODE_ENV === 'production') {
         // })
     ])
 } else if (process.env.NODE_ENV === 'development') {
+    // 1.0的 loader: 'style-loader!css-loader?modules'//添加对样式表的处理
     let css_json = {
         test: /\.css$/,
         use: [

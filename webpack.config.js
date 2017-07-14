@@ -1,6 +1,8 @@
 /**
  * Created by zw9love on 2017/7/10.
  */
+
+require('shelljs/global')
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -78,26 +80,36 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
+
+    /* 拼接编译输出文件路径 */
+    var assetsPath = path.join(path.resolve(__dirname, './webapp/'), assetsSubDirectory)
+    /* 删除这个文件夹 （递归删除） */
+    rm('-rf', assetsPath)
+    /* 创建此文件夹 */
+    mkdir('-p', assetsPath)
+    /* 复制 static 文件夹到我们的编译输出目录 */
+    cp('-R', 'static/*', assetsPath)
+
     // '#source-map'
     module.exports.devtool = false
     module.exports.output = {
         path: path.resolve(__dirname, './webapp/'),//打包后的文件存放的地方
         publicPath: './',
         // filename: "/js/bundle.js"// 打包后输出文件的文件名
-        filename: path.posix.join(assetsSubDirectory, 'js/bundle.js')
+        filename: path.posix.join(assetsSubDirectory, 'js/bundle.[hash].js')
     }
 
     let css_json = {
         test: /\.css$/,
-        use:
-        // ExtractTextPlugin.extract 在dev模式下不好使 extractCSS
+        use: // ExtractTextPlugin.extract 在dev模式下不好使 extractCSS
             ExtractTextPlugin.extract({
                 fallback: "style-loader",
                 use: [
                     {
                         loader: "css-loader",
                         options: {
-                            modules: true
+                            modules: true,
+                            url: false
                         }
                     },
                     {
@@ -151,24 +163,24 @@ if (process.env.NODE_ENV === 'production') {
     let css_json = {
         test: /\.css$/,
         use: [
-                {
-                    loader: "style-loader"
-                },
-                {
-                    loader: "css-loader",
-                    options: {
-                        modules: true
-                    }
-                },
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        plugins: function () {
-                            return [autoprefixer]
-                        }
+            {
+                loader: "style-loader"
+            },
+            {
+                loader: "css-loader",
+                options: {
+                    modules: true
+                }
+            },
+            {
+                loader: 'postcss-loader',
+                options: {
+                    plugins: function () {
+                        return [autoprefixer]
                     }
                 }
-            ]
+            }
+        ]
     }
     module.exports.module.rules.push(css_json)
     module.exports.plugins = (module.exports.plugins || []).concat([

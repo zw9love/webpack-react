@@ -136,7 +136,7 @@ if (process.env.NODE_ENV === 'production') {
         new HtmlWebpackPlugin({
             filename: './index.html',
             inject: true,
-            template: './template.html',
+            template: './public/index.html',
             //压缩HTML文件
             minify: {
                 removeComments: true, //移除HTML中的注释
@@ -183,6 +183,14 @@ if (process.env.NODE_ENV === 'production') {
         ]
     }
     module.exports.module.rules.push(css_json)
+    module.exports.output = {
+        path: path.resolve(__dirname, './public'),//打包后的文件存放的地方
+        // publicPath: './',
+        // filename: "/js/bundle.js"// 打包后输出文件的文件名
+        filename: 'bundle.js'
+    }
+
+
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env': {
@@ -190,7 +198,13 @@ if (process.env.NODE_ENV === 'production') {
             }
         }),
         // new ExtractTextPlugin(path.posix.join(assetsSubDirectory, '/css/[name].[contenthash].css')),//  生成css文件夹
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            inject: true,
+            template: './public/index.html'
+        })
 
     ])
 }
